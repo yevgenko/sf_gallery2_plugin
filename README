@@ -1,0 +1,81 @@
+# sfGallery2Plugin #
+
+## Overview ##
+
+Gallery2 is a great open source web based photo album organizer.
+This plugin provides an interface to its embedded mode.
+
+See http://gallery.menalto.com/
+
+## Installation ##
+  
+* Get gallery2 (prefer minimal install, and grow it up with modules)
+
+* copy /gallery2 directory to your [symfony]/web directory
+
+* go to http://yoursite/gallery2/install/index.php
+
+* Follow install instructions.  
+I recommand to choose [symfony]/data/g2data as your data directory.
+
+* Test it in standalone mode : http://yoursite/gallery2/main.php.
+
+* Install the sfGallery2 plugin, and configure your app.yml  
+
+        all:
+          gallery2:
+            dir:                 %SF_WEB_DIR%/gallery2
+            uri:                 /gallery2/
+            embed_uri:           /gallery
+            login:               0
+            login_redirect:      /login
+            show_sidebar_blocks: 1
+            map_mode:            0
+            map_user:            user
+            map_admin:           admin
+
+ #### descriptions ####
+
+ * **dir** : your gallery2 local directory
+ * **uri** : your gallery2 web server directory
+ * **embed_uri** : the uri by which users can access your embed gallery.  
+   (additionaly, the plugin create a new route for it)
+ * **login** : show the "connection" link *[0|1]*
+ * **login_redirect** : if show connection link, where does he go ?
+ * **show_sidebar_blocks** : show the sidebar (=>gallery2 contextual menu) *[0|1]*
+
+ Map Mode is the big deal of this plugin.
+
+ Gallery2 comes with its own user/group/permissions system, that you can synchronize with yours. But in most of the case, you just need one anonymous access for visitors, one user access (the same for all users), and one admin access (the same for all admins).  
+Here come the 'map_mode'.
+ #### set your value ####
+ * **0** : Visitors only.  
+   All visitors are guest in embedded mode. Users and administrators have to access gallery2 in standard mode.
+ * **1** : Simple User.  
+   All authenticated symfony users are mapped to the same gallery2 user (whose can be admin).  
+   The rests are guests.  
+   For instance, you can create this user in gallery2 standard mode, then, just set "map_user" to his name.
+ * **2** : Simple Admin. (sfGuard only)  
+   Authenticated symfony users are mapped the same gallery2 user (see mode 1).  
+   Symfony SuperAdmins are mapped to the same gallery2 admin (see mode 1 too, except that you have to set "map_admin" instead of "map_user")  
+   *(note : although superadmin is not yet completely implemented in sfGuard, you can manually set the "is_super_admin" flag to 1 in the "sf_guard_user" database table).*
+
+## Notes ##
+
+* You can disable gallery2 standard mode by going to your /gallery2/config.php file, and change :
+
+        $gallery->setConfig('mode.embed.only', false);
+  to :
+
+        $gallery->setConfig('mode.embed.only', '/gallery');
+
+## Usage ##
+
+Just go to http://yoursite/gallery
+Depending on your map_mode, and your current user status, you will have access to gallery2 in guest, user or administrator mode.
+
+## Changelog ##
+
+### 2.0.0 ###
+* New release based on 1.0.2
+* Update config.php to support new symfony 1.1 routing system

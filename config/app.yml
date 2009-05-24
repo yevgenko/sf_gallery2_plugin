@@ -1,0 +1,14 @@
+all:
+  gallery2:
+    dir:                 %SF_WEB_DIR%/gallery2
+    uri:                 /gallery2/
+    embed_uri:           /gallery
+
+    login:               0
+    login_redirect:      /login
+    
+    show_sidebar_blocks: 1
+    
+    map_mode:            0
+    map_user:            user
+    map_admin:           admin
