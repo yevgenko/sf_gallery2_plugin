@@ -131,15 +131,24 @@ class sfGallery2PluginActions extends sfActions
     }
 
     // Parse CSS files
-    preg_match_all('@href="(.*).css"@i', $g2moddata['headHtml'], $files);    
-    foreach($files[1] as $file)
-      $this->getResponse()->addStyleSheet($file);
-
+    preg_match_all('@href="(.*).css"@i', $g2moddata['headHtml'], $files);
+    foreach($files[0] as $file){
+      preg_match('@^(?:href=")?([^"]+)@i', $file, $n_file);
+      $this->getResponse()->addStyleSheet($n_file[1]);
+    }
     // Parse JS files
-    preg_match_all('@src="(.*).js"@i', $g2moddata['headHtml'], $files);    
-    foreach($files[1] as $file)
-      $this->getResponse()->addJavascript($file);
-
+    preg_match_all('@src="(.*).js"@i', $g2moddata['headHtml'], $files);
+    foreach($files[0] as $file)
+    {
+      preg_match('@^(?:src=")?([^"]+)@i', $file, $n_file);
+      $this->getResponse()->addJavascript($n_file[1]);
+    }
+    // Parse JS files
+    preg_match_all('@src="(.*).php(.*)"@i', $g2moddata['headHtml'], $files);
+    foreach($files[0] as $file) {
+      preg_match('@^(?:src=")?([^"]+)@i', $file, $n_file);
+      $this->getResponse()->addJavascript($n_file[1]);
+    }
     // Parse title
     preg_match_all('@<title>(.*)</title>@i', $g2moddata['headHtml'], $title);
     if ((isset($title[1][0])) && (!empty($title[1][0])))
